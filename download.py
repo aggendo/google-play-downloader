@@ -109,8 +109,8 @@ def demonstrate():
     psongs = list()
     ###############
     #NAME OF PLIST#
-    ###############
-    pnames = ('better electronic', 'sleep', 'hipster party 8/6/15', 'small party vibe')#'awesome indie', 'epic indie', 'before it breaks', 'sleep', 'hipster party 8/6/15')
+    ############### #'better electronic', 'sleep', 'hipster party 8/6/15', 
+    pnames = ('sleep', 'awesome indie', 'epic indie', 'before it breaks', 'sleep', 'hipster party 8/6/15')
     #pname = 'Download' #2k
     for pname in pnames:
         playlists = api.get_all_user_playlist_contents() #gets all the playlists
@@ -123,6 +123,7 @@ def demonstrate():
         #print playlists[0]
         print("playlist length =" + str(len(plist)))
         #print plist
+        psongs = list()
         for Usong in plist:
             song = convert(Usong)
             #Usong = convertKeys(Usong)
@@ -267,7 +268,7 @@ def demonstrate():
                     id3info['COMPOSER'] = song['composer']
                 except InvalidTagError, message:
                     print "Invalid ID3 tag:", message"""
-
+        plistF.close()
     # It's good practice to logout when finished.
     api.logout()
     print 'All done!'
