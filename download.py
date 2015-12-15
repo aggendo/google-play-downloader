@@ -6,13 +6,13 @@ from mutagen import File #TODO: fix this so I am not importing all of mutagen
 import httplib
 import os as os
 import urllib#3
-import urllib2
-import certifi
+#import urllib2
+#import certifi
 from time import sleep
-from ID3 import *
-import eyed3 as eyed3
-from eyed3.id3 import Tag
-from eyed3.id3 import ID3_V2_4
+#from ID3 import *
+#import eyed3 as eyed3
+#from eyed3.id3 import Tag
+#from eyed3.id3 import ID3_V2_4
 import logging
 from PIL import Image
 import traceback
@@ -29,6 +29,12 @@ folder='C:\\Users\\John\\Music\\google play\\' #'C:\Users\john\Desktop\Unofficia
 conf = config.config()
 working_device_id = conf.get_device_id()
 del conf
+
+def prevent_quit(root):
+    pass
+    #override root.destroy() so we quit too
+    root.destroy
+    exit(0) #we stop the background code here too!
 
 def convert(data):
     if isinstance(data, basestring):
@@ -64,8 +70,8 @@ def ask_for_credentials():
 
 def dlProgress(count, blockSize, totalSize):
     percent = int(count*blockSize*100/totalSize)
-    sys.stdout.write("\r" + "...%d%%" % percent)
-    sys.stdout.flush()
+    #sys.stdout.write("\r" + "...%d%%" % percent)
+    #sys.stdout.flush()
      
 def retrev(testfile, url, filePath):
     try:#testfile.retreive
@@ -88,13 +94,14 @@ def Quit(root):
     root.destroy()
     exit(0)
 
-def demonstrate():
+def App():
     root = tk.Tk()
     message = tk.StringVar()
     message.set("Logging in")
     frame = tk.Frame(root)
     tk.Label(root, textvariable=message).pack()
     tk.Button(root, text="Cancel", command=lambda root=root: Quit(root)).pack()
+    root.protocol('WM_DELETE_WINDOW', lambda root=root: prevent_quit(root))
     root.after(500, lambda root=root, message=message: begin_login(root, message)) #this will start the process after a half a second
     root.mainloop()
 
@@ -126,7 +133,7 @@ def begin_login(root, message):
     ###############
     #NAME OF PLIST#
     ############### #'better electronic', 'sleep', 'hipster party 8/6/15', 
-    pnames = ('sleep', 'awesome indie', 'epic indie', 'before it breaks', 'sleep', 'hipster party 8/6/15')
+    pnames = ('2k', 'Download')#'sleep', 'awesome indie', 'epic indie', 'before it breaks', 'sleep', 'hipster party 8/6/15')
     #pname = 'Download' #2k
     for pname in pnames:
         playlists = api.get_all_user_playlist_contents() #gets all the playlists
@@ -314,5 +321,5 @@ def make_valid(fileName):
     return(fileName)
 
 if __name__ == '__main__':
-    demonstrate()
+    App()
 
