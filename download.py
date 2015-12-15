@@ -20,6 +20,7 @@ import re
 #import ssl
 import mutagen
 import sys
+import tkinter as tk
 
 import config
 
@@ -63,8 +64,8 @@ def ask_for_credentials():
 
 def dlProgress(count, blockSize, totalSize):
     percent = int(count*blockSize*100/totalSize)
-    #sys.stdout.write("\r" + "...%d%%" % percent)
-    #sys.stdout.flush()
+    sys.stdout.write("\r" + "...%d%%" % percent)
+    sys.stdout.flush()
      
 def retrev(testfile, url, filePath):
     try:#testfile.retreive
@@ -83,9 +84,22 @@ def resize_image(filename, width, height):
     f1 = open(filename, 'rb')
     return(f1.read())
 
-def demonstrate():
-    """Demonstrate some api features."""
+def Quit(root):
+    root.destroy()
+    exit(0)
 
+def demonstrate():
+    root = tk.Tk()
+    message = tk.StringVar()
+    message.set("Logging in")
+    frame = tk.Frame(root)
+    tk.Label(root, textvariable=message).pack()
+    tk.Button(root, text="Cancel", command=lambda root=root: Quit(root)).pack()
+    root.after(500, lambda root=root, message=message: begin_login(root, message)) #this will start the process after a half a second
+    root.mainloop()
+
+def begin_login(root, message):
+    
     api = ask_for_credentials()
 
     if not api.is_authenticated():
@@ -95,12 +109,14 @@ def demonstrate():
     print 'Successfully logged in.'
     print
 
+    message.set("loading library")
+
     # Get all of the users songs.
     # library is a big list of dictionaries, each of which contains a single song.
     print 'Loading library...',
     #library = api.get_all_songs()
     print 'done.'
-
+    root.destroy()
     #print len(library), 'tracks detected.'
     #print
     global plist
