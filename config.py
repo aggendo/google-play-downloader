@@ -12,6 +12,7 @@ import os
 email=myEmail
 password=myPassword
 deviceid=myDeviceId
+folder=myFold
 [Info]
 settingsversion=1
 """
@@ -53,12 +54,20 @@ class Config:
 
     def write_out(self):
         self.config.write(open(self.path, "w"))
-    
+
+   def set_folder(self, fold):
+        self.config.set("Settings", "folder", fold)
+
+   def get_folder(self):
+	return(self.config.get("Settings", "folder"))
+
     def generate_cfg(self):
         self.config.add_section("Credentials")
         self.config.set("Credentials", "email", "blahemail")
         self.config.set("Credentials", "password", "blahpass")
         self.config.set("Credentials", "deviceid", "blahid")
+        self.config.add_section("Settings")
+        self.config.set("Settings", "folder", "blahfolder")
         self.config.add_section("Info")
         self.config.set("Info", "settingsversion", "1")
         self.write_out()

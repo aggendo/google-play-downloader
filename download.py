@@ -1,4 +1,3 @@
-from getpass import getpass
 from mutagen.mp3 import MP3
 from mutagen.id3 import ID3, APIC, error, ID3NoHeaderError
 from mutagen.easyid3 import EasyID3
@@ -6,18 +5,11 @@ from mutagen import File #TODO: fix this so I am not importing all of mutagen
 import httplib
 import os as os
 import urllib#3
-#import urllib2
-#import certifi
 from time import sleep
-#from ID3 import *
-#import eyed3 as eyed3
-#from eyed3.id3 import Tag
-#from eyed3.id3 import ID3_V2_4
 import logging
 from PIL import Image
 import traceback
 import re
-#import ssl
 import mutagen
 import sys
 import tkinter as tk
@@ -25,16 +17,10 @@ import tkinter as tk
 import config
 
 from gmusicapi import Mobileclient
-folder='C:\\Users\\John\\Music\\google play\\' #'C:\Users\john\Desktop\Unofficial-Google-Music-API-develop\playlists'
 conf = config.config()
 working_device_id = conf.get_device_id()
+folder = conf.get_folder()
 del conf
-
-def prevent_quit(root):
-    pass
-    #override root.destroy() so we quit too
-    root.destroy
-    exit(0) #we stop the background code here too!
 
 def convert(data):
     if isinstance(data, basestring):
@@ -60,8 +46,8 @@ def ask_for_credentials():
     while not logged_in and attempts < 3:
         conf = config.config()
         
-        email = conf.get_email()#raw_input('Email: ')
-        password = conf.get_password() #get_pass()
+        email = conf.get_email()
+        password = conf.get_password()
 
         logged_in = api.login(email, password, Mobileclient.FROM_MAC_ADDRESS)
         attempts += 1
@@ -90,22 +76,10 @@ def resize_image(filename, width, height):
     f1 = open(filename, 'rb')
     return(f1.read())
 
-def Quit(root):
-    root.destroy()
-    exit(0)
-
 def App():
-    root = tk.Tk()
-    message = tk.StringVar()
-    message.set("Logging in")
-    frame = tk.Frame(root)
-    tk.Label(root, textvariable=message).pack()
-    tk.Button(root, text="Cancel", command=lambda root=root: Quit(root)).pack()
-    root.protocol('WM_DELETE_WINDOW', lambda root=root: prevent_quit(root))
-    root.after(500, lambda root=root, message=message: begin_login(root, message)) #this will start the process after a half a second
-    root.mainloop()
+    begin_login()
 
-def begin_login(root, message):
+def begin_login():
     
     api = ask_for_credentials()
 
@@ -116,14 +90,11 @@ def begin_login(root, message):
     print 'Successfully logged in.'
     print
 
-    message.set("loading library")
-
     # Get all of the users songs.
     # library is a big list of dictionaries, each of which contains a single song.
     print 'Loading library...',
     #library = api.get_all_songs()
     print 'done.'
-    root.destroy()
     #print len(library), 'tracks detected.'
     #print
     global plist
