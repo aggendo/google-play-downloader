@@ -102,15 +102,21 @@ def App():
     tk.Label(root, textvariable=message).pack()
     tk.Button(root, text="Cancel", command=lambda root=root: Quit(root)).pack()
     root.protocol('WM_DELETE_WINDOW', lambda root=root: prevent_quit(root))
-    root.after(500, lambda root=root, message=message: begin_login(root, message)) #this will start the process after a half a second
+    root.after(500, lambda root=root, message=message: attempt_login(root, message)) #this will start the process after a half a second
     root.mainloop()
 
-def begin_login(root, message):
-    
+def attempt_login(root, message):
     api = ask_for_credentials()
+    try:
+        begin_login(root, message, api) #TODO: fix this garbage
+    except:
+        api.logout()
+
+def begin_login(root, message, api):
 
     if not api.is_authenticated():
         print "Sorry, those credentials weren't accepted."
+        message.set("Sorry, those credentials weren't accepted.")
         return
 
     print 'Successfully logged in.'
@@ -137,21 +143,20 @@ def begin_login(root, message):
     #pname = 'Download' #2k
     all_lists = api.get_all_user_playlist_contents()
     pnames = list()
-    for Playlist in all_lists:
+    for Playlist in all_lists[41:]:
         pnames.append(Playlist['name'])
     llength = len(pnames);
     lcurrent = 0; #current playlist number
     for pname in pnames:
         lcurrent = lcurrent+1;
         playlists = api.get_all_user_playlist_contents() #gets all the playlists
-        print('playlists='+str(len(playlists)))
         for playlist in playlists:
             if(playlist['name']==pname):
                 plist = playlist['tracks'] #save the id
                 #print plist
                 break
         #print playlists[0]
-        print("playlist "+str(lcurrent)+"/"+str(llength)+str(pname)+" length=" + str(len(plist)))
+        print("playlist "+str(lcurrent)+"/"+str(llength)+" "+str(pname)+" length=" + str(len(plist)))
         #print plist
         psongs = list()
         for Usong in plist:
@@ -159,9 +164,12 @@ def begin_login(root, message):
             #Usong = convertKeys(Usong)
             #print Usong
             Usong = Usong.get('track', Usong.get(u'track')) #we only want the track portion
-            song['track']['Usong'] = Usong #store unicode for later
-            #print(song['track']['title'])
-            psongs.append(song['track'])
+            try:
+               song['track']['Usong'] = Usong #store unicode for later
+               #print(song['track']['title'])
+               psongs.append(song['track'])
+            except Exception:
+               print("failed on song "+str(song))
         #we now have all the playlists
         del playlists
         dsongs = list() #list of songs to download with full metadata
@@ -199,12 +207,20 @@ def begin_login(root, message):
                 if not os.path.exists(albumFolder):
                     os.makedirs(albumFolder)       #create structure
                 if not os.path.exists(filePath):
-                    url = api.get_stream_url(song['storeId'], working_device_id)
-                    print("downloading \'" + song['title'] + '\' from album \"' + song['album'] + "\"")
+                    url="" #placeholder to stop garbage collector
+   		    try:
+			url = api.get_stream_url(song['storeId'], working_device_id)
+		    except Exception, err:
+			print('error above')
+			print(traceback.format_exc())
+                        api.logout()
+                        exit(0)
+		    finally:
+			print("downloading \'" + song['title'] + '\' from album \"' + song['album'] + "\"")
                     if not retrev(testfile, url, filePath):#testfile.retrieve(url, filePath)
-                        try:
+		        try:
                             try:
-                                meta2 = EasyID3(filePath)
+				meta2 = EasyID3(filePath)
                                 #print('before: ' + str(meta2))
                                 #meta = mutagen.id3.ID3
                                 #audiofile = eyed3.load(filePath)
