@@ -25,7 +25,7 @@ import tkinter as tk
 import config
 
 from gmusicapi import Mobileclient
-folder='/home/craez/Music' #'C:\Users\john\Desktop\Unofficial-Google-Music-API-develop\playlists'
+folder='/home/creaz/Music' #'C:\Users\john\Desktop\Unofficial-Google-Music-API-develop\playlists'
 conf = config.config()
 working_device_id = conf.get_device_id()
 del conf
@@ -138,7 +138,7 @@ def begin_login(root, message):
     all_lists = api.get_all_user_playlist_contents()
     pnames = list()
     for Playlist in all_lists:
-        pnames.append(playlist['name'])
+        pnames.append(Playlist['name'])
     llength = len(pnames);
     lcurrent = 0; #current playlist number
     for pname in pnames:
@@ -151,7 +151,7 @@ def begin_login(root, message):
                 #print plist
                 break
         #print playlists[0]
-        print("playlist"+str(lcurent)+"/"+str(llength)+str(pname)+"length =" + str(len(plist)))
+        print("playlist "+str(lcurrent)+"/"+str(llength)+str(pname)+" length=" + str(len(plist)))
         #print plist
         psongs = list()
         for Usong in plist:
