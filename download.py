@@ -133,9 +133,16 @@ def begin_login(root, message):
     ###############
     #NAME OF PLIST#
     ############### #'better electronic', 'sleep', 'hipster party 8/6/15', 
-    pnames = ('2k', 'Download')#'sleep', 'awesome indie', 'epic indie', 'before it breaks', 'sleep', 'hipster party 8/6/15')
+    #pnames = ('2k', 'Download')#'sleep', 'awesome indie', 'epic indie', 'before it breaks', 'sleep', 'hipster party 8/6/15')
     #pname = 'Download' #2k
+    all_lists = api.get_all_user_playlist_contents()
+    pnames = list()
+    for Playlist in all_list:
+        pnames.append(playlist['name'])
+    llength = len(pnames);
+    lcurrent = 0; #current playlist number
     for pname in pnames:
+        lcurrent = lcurrent+1;
         playlists = api.get_all_user_playlist_contents() #gets all the playlists
         print('playlists='+str(len(playlists)))
         for playlist in playlists:
@@ -144,7 +151,7 @@ def begin_login(root, message):
                 #print plist
                 break
         #print playlists[0]
-        print("playlist length =" + str(len(plist)))
+        print("playlist"+str(lcurent)+"/"+str(llength)+str(pname)+"length =" + str(len(plist)))
         #print plist
         psongs = list()
         for Usong in plist:
