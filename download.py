@@ -25,7 +25,7 @@ import tkinter as tk
 import config
 
 from gmusicapi import Mobileclient
-folder='C:\\Users\\John\\Music\\google play\\' #'C:\Users\john\Desktop\Unofficial-Google-Music-API-develop\playlists'
+folder='/home/craez/Music' #'C:\Users\john\Desktop\Unofficial-Google-Music-API-develop\playlists'
 conf = config.config()
 working_device_id = conf.get_device_id()
 del conf
@@ -137,7 +137,7 @@ def begin_login(root, message):
     #pname = 'Download' #2k
     all_lists = api.get_all_user_playlist_contents()
     pnames = list()
-    for Playlist in all_list:
+    for Playlist in all_lists:
         pnames.append(playlist['name'])
     llength = len(pnames);
     lcurrent = 0; #current playlist number
