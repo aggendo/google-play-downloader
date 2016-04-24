@@ -12,6 +12,8 @@ import os
 email=myEmail
 password=myPassword
 deviceid=myDeviceId
+folder=myFolder
+
 ***REMOVED***
 settingsversion=1
 """
@@ -51,6 +53,13 @@ class Config:
         self.config.set("Credentials", "deviceid", devId)
         self.write_out()
 
+    def get_folder(self):
+        return(self.config.get("Settings", "folder"))
+
+    def set_folder(self, folder):
+        self.config.set("Settings", "folder", folder)
+        self.write_out()
+
     def write_out(self):
         self.config.write(open(self.path, "w"))
     
@@ -59,6 +68,8 @@ class Config:
         self.config.set("Credentials", "email", "blahemail")
         self.config.set("Credentials", "password", "blahpass")
         self.config.set("Credentials", "deviceid", "blahid")
+        self.config.add_section("Settings")
+        self.config.set("Settings", "folder", "unset")
         self.config.add_section("Info")
         self.config.set("Info", "settingsversion", "1")
         self.write_out()
