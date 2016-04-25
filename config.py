@@ -6,15 +6,15 @@ import os
 
 #example format:
 """
-***REMOVED***
+[Settings]
 ....
-***REMOVED***
+[Credentials]
 email=myEmail
 password=myPassword
 deviceid=myDeviceId
 folder=myFolder
 
-***REMOVED***
+[Info]
 settingsversion=1
 """
 
